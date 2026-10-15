@@ -1,6 +1,13 @@
 <!doctype html>
 <html lang="ru">
 <head>
+<script>
+  (function () {
+    var t = 'light';
+    try { var q = /[?&]theme=(dark|light)/.exec(location.search); if (q) t = q[1]; else t = localStorage.getItem('mebel-theme') || 'light'; } catch (e) {}
+    document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+  })();
+</script>
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow" data-publish>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -39,6 +46,14 @@
     --v-font-text: "Manrope", "Segoe UI", system-ui, sans-serif;
     --v-shadow-color: 4 8 5;
     --v-radius: 10px;
+    --canvas-rgb: 242 239 233; --ink-rgb: 29 32 30; --accent-rgb: 60 106 80; --shadow-rgb: 29 32 30;
+  }
+  html[data-theme="dark"] { color-scheme: dark; }
+  html[data-theme="dark"] .v-page {
+    --v-canvas: #121417; --v-surface: #1a1d22;
+    --v-ink: #e9ecef; --v-ink-soft: #a9b0b8;
+    --v-accent: #c5ced8; --v-accent-ink: #12161b;
+    --canvas-rgb: 18 20 23; --ink-rgb: 233 236 239; --accent-rgb: 197 206 216; --shadow-rgb: 0 0 0;
   }
   .v-page .v-display { font-weight: 600; letter-spacing: -0.015em; }
   .v-page .v-display--xl { line-height: .98; }
@@ -55,23 +70,31 @@
   /* ---- шапка: прозрачная на первом экране, плотная после ---------------- */
   .bar { position: fixed; inset: 0 0 auto 0; z-index: 30; display: flex; align-items: center; justify-content: space-between;
     padding: var(--v-3) var(--v-gutter); gap: var(--v-4);
-    background: linear-gradient(to bottom, rgb(242 239 233 / .88), rgb(242 239 233 / 0));
+    background: linear-gradient(to bottom, rgb(var(--canvas-rgb) / .88), rgb(var(--canvas-rgb) / 0));
     transition: background-color .24s var(--v-ease-out), box-shadow .24s var(--v-ease-out); }
-  .bar.is-scrolled { background: rgb(242 239 233); box-shadow: 0 1px 0 rgb(29 32 30 / .10), 0 8px 24px rgb(4 8 5 / .35); }
+  .bar.is-scrolled { background: rgb(var(--canvas-rgb)); box-shadow: 0 1px 0 rgb(var(--ink-rgb) / .10), 0 8px 24px rgb(4 8 5 / .35); }
   .bar__mark { font-family: var(--v-font-display); font-weight: 600; font-size: var(--v-t-base); letter-spacing: 0; text-decoration: none; display: inline-flex; align-items: center; gap: .5em; min-height: 44px; }
   .bar__mark i { width: .7em; height: .7em; border-radius: 2px; background: var(--v-accent); display: inline-block; transform: rotate(45deg); }
   .bar__right { display: flex; align-items: center; gap: var(--v-5); }
+  .theme { display: inline-flex; align-items: center; gap: .5em; min-height: 44px; padding: 0 1em; border-radius: 999px; border: 1px solid var(--v-hair-strong); background: transparent; color: var(--v-ink); font: 600 var(--v-t-sm)/1 var(--v-font-text); cursor: pointer; transition: background .18s var(--v-ease-out), border-color .18s var(--v-ease-out); }
+  .theme:hover { background: rgb(var(--ink-rgb) / .07); }
+  .theme:focus-visible { outline: 2px solid var(--v-accent); outline-offset: 2px; }
+  .theme .t-sun { display: none; }
+  html[data-theme="dark"] .theme .t-sun { display: inline; }
+  html[data-theme="dark"] .theme .t-moon { display: none; }
+  .bar__mark { white-space: nowrap; }
+  @media (max-width: 760px) { .theme { padding: 0; width: 40px; min-height: 44px; justify-content: center; } .theme span { display: none; } .bar__right { gap: .25rem; } .bar .v-btn { padding: .7em .95em; font-size: .875rem; } .bar__mark { font-size: .9375rem; } }
   .bar__tel { font-weight: 600; font-size: var(--v-t-sm); color: var(--v-ink); padding: 0 .25em; }
   @media (max-width: 760px) { .bar__tel { display: none; } .bar .v-btn { padding: .75em 1.1em; font-size: .9375rem; } }
 
   /* ---- hero: три плана, текст по центру сверху --------------------------- */
   .hero__back img { width: 116%; height: 140%; left: -8%; top: -2%; object-fit: cover; object-position: 50% 50%; }
   .hero__door img { width: clamp(200px, 21vw, 360px); right: clamp(2rem, 8vw, 10rem); bottom: -3vh;
-    filter: drop-shadow(0 34px 44px rgb(29 32 30 / .30)); }
+    filter: drop-shadow(0 34px 44px rgb(var(--shadow-rgb) / .30)); }
   .hero__floor { position: absolute; inset: auto 0 0 0; height: 30%; z-index: 2; pointer-events: none;
-    background: linear-gradient(to top, var(--v-canvas) 0%, rgb(242 239 233 / .88) 24%, rgb(242 239 233 / .3) 52%, transparent 100%); }
+    background: linear-gradient(to top, var(--v-canvas) 0%, rgb(var(--canvas-rgb) / .88) 24%, rgb(var(--canvas-rgb) / .3) 52%, transparent 100%); }
   .hero__veil { position: absolute; inset: 0 0 auto 0; height: 58%; z-index: 2; pointer-events: none;
-    background: linear-gradient(to bottom, rgb(242 239 233 / .32) 0%, rgb(242 239 233 / .14) 55%, transparent 100%); }
+    background: linear-gradient(to bottom, rgb(var(--canvas-rgb) / .32) 0%, rgb(var(--canvas-rgb) / .14) 55%, transparent 100%); }
   .hero__copy { position: absolute; z-index: 3; left: var(--v-gutter); right: var(--v-gutter); top: clamp(6rem, 15vh, 10rem);
     text-align: center; display: flex; flex-direction: column; align-items: center; }
   .hero__copy .v-display { font-size: var(--v-t-3xl); max-width: 16ch; }
@@ -96,7 +119,7 @@
     /* кухня видна: фронты и подсветка в нижней трети экрана, дверца стоит на столешнице */
     .hero__back img { width: 180%; height: auto; left: -40%; top: auto; bottom: 5vh; object-fit: unset;
       -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 42%); mask-image: linear-gradient(to bottom, transparent 0%, #000 42%); }
-    .hero__door img { width: 32vw; right: 0; bottom: 7vh; filter: drop-shadow(0 18px 24px rgb(29 32 30 / .26)); }
+    .hero__door img { width: 32vw; right: 0; bottom: 7vh; filter: drop-shadow(0 18px 24px rgb(var(--shadow-rgb) / .26)); }
     .hero__veil { display: none; }
     .hero__floor { height: 16%; }
     .hero__copy { top: clamp(5.25rem, 12vh, 7rem); align-items: flex-start; text-align: left; }
@@ -175,11 +198,11 @@
   .v-page .work__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .v-page .work__img:not([src]) { display: none; }
   .work__empty { position: absolute; inset: 0; display: grid; align-content: start; justify-items: center; gap: .3em; text-align: center; padding: 22% var(--v-4) var(--v-4);
-    background: radial-gradient(70% 60% at 50% 40%, rgb(60 106 80 / .10), transparent 70%); }
+    background: radial-gradient(70% 60% at 50% 40%, rgb(var(--accent-rgb) / .10), transparent 70%); }
   .work__empty .v-label { color: var(--v-ink-soft); }
   .work__empty b { font-family: var(--v-font-display); font-weight: 500; font-style: italic; font-size: var(--v-t-lg); color: var(--v-ink); line-height: 1.1; }
   .work.is-photo .work__empty { display: none; }
-  .work.is-photo::after { content: ""; position: absolute; inset: auto 0 0 0; height: 45%; background: linear-gradient(to top, rgb(242 239 233 / .8), transparent); }
+  .work.is-photo::after { content: ""; position: absolute; inset: auto 0 0 0; height: 45%; background: linear-gradient(to top, rgb(var(--canvas-rgb) / .8), transparent); }
   .work figcaption { position: absolute; z-index: 2; left: var(--v-4); right: var(--v-4); bottom: var(--v-4); font-size: var(--v-t-xs); letter-spacing: var(--v-track-wide); text-transform: uppercase; color: var(--v-ink-soft); line-height: 1.4; }
   .work figcaption b { color: var(--v-ink); font-weight: 600; }
   @media (max-width: 1000px) {
@@ -294,7 +317,7 @@
 
   /* ---- финал: по центру, свет за курсором --------------------------------- */
   .close { height: 100%; display: grid; grid-template-rows: 1fr auto; padding: 0 var(--v-gutter);
-    background: radial-gradient(56rem 38rem at calc(var(--v-mx, .5) * 100%) calc(var(--v-my, .45) * 100%), rgb(60 106 80 / .16), transparent 62%); }
+    background: radial-gradient(56rem 38rem at calc(var(--v-mx, .5) * 100%) calc(var(--v-my, .45) * 100%), rgb(var(--accent-rgb) / .16), transparent 62%); }
   .close__inner { align-self: center; text-align: center; display: flex; flex-direction: column; align-items: center; padding-top: var(--v-9); }
   .close__inner .v-display { max-width: 20ch; }
   .close__inner .v-lede { margin: var(--v-5) auto 0; max-width: 40ch; color: var(--v-ink-soft); }
@@ -331,6 +354,7 @@
   <header class="bar" id="bar">
     <a class="bar__mark" href="#top"><i aria-hidden="true"></i>Мебель Платов</a>
     <div class="bar__right">
+      <button class="theme" id="themeBtn" type="button" aria-label="Переключить тему: тёмная"><svg class="t-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg><svg class="t-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span id="themeLabel">Тёмная</span></button>
       <a class="bar__tel tap" href="tel:+70000000000">+7 000 000-00-00</a>
       <a class="v-btn" href="#raschet">Рассчитать кухню</a>
     </div>
@@ -342,11 +366,11 @@
     <section data-v-act="pin" data-v-span="1.6" data-v-drift="#f2efe9" aria-label="Кухни на заказ по вашим размерам">
       <div data-v-stage>
         <div class="v-layer hero__back" data-v-parallax="-0.7">
-          <img src="assets/kitchen-base.webp" alt="" width="1920" height="1067">
+          <img data-tsrc="kitchen-base.webp" alt="" width="1920" height="1067">
         </div>
         <div class="hero__veil" aria-hidden="true"></div>
         <div class="v-layer hero__door" data-v-parallax="-0.3">
-          <img src="assets/door.webp" alt="" width="1000" height="1257">
+          <img data-tsrc="door.webp" alt="" width="1000" height="1257">
         </div>
         <div class="hero__floor" aria-hidden="true"></div>
 
@@ -370,10 +394,10 @@
     <section data-v-act="pin" data-v-span="2.6" data-v-drift="#ece8e0" id="fasady" aria-label="Конфигуратор фасадов">
       <div data-v-stage>
         <div class="conf" aria-hidden="true">
-          <img class="conf__img" src="assets/kitchen-base.webp" alt="" width="1920" height="1067">
-          <img class="conf__img" src="assets/kitchen-white.webp" alt="" width="1920" height="1067" loading="lazy">
-          <img class="conf__img" src="assets/kitchen-oak.webp" alt="" width="1920" height="1067" loading="lazy">
-          <img class="conf__img" src="assets/kitchen-green.webp" alt="" width="1920" height="1067" loading="lazy">
+          <img class="conf__img" data-tsrc="kitchen-base.webp" alt="" width="1920" height="1067">
+          <img class="conf__img" data-tsrc="kitchen-white.webp" alt="" width="1920" height="1067" loading="lazy">
+          <img class="conf__img" data-tsrc="kitchen-oak.webp" alt="" width="1920" height="1067" loading="lazy">
+          <img class="conf__img" data-tsrc="kitchen-green.webp" alt="" width="1920" height="1067" loading="lazy">
         </div>
 
         <div class="conf__top">
@@ -463,15 +487,15 @@
         </div>
         <div class="mat__figs">
           <figure data-v-reveal="up" data-v-reveal-at="0.12 0.42">
-            <img src="assets/facade.webp" alt="Кромка фасада из МДФ в эмали крупно" width="1200" height="1600" loading="lazy">
+            <img data-tsrc="facade.webp" alt="Кромка фасада из МДФ в эмали крупно" width="1200" height="1600" loading="lazy">
             <figcaption>Фасад, кромка</figcaption>
           </figure>
           <figure data-v-reveal="left" data-v-reveal-at="0.2 0.5">
-            <img src="assets/quartz.webp" alt="Поверхность столешницы из кварцевого агломерата" width="1200" height="1600" loading="lazy">
+            <img data-tsrc="quartz.webp" alt="Поверхность столешницы из кварцевого агломерата" width="1200" height="1600" loading="lazy">
             <figcaption>Кварц</figcaption>
           </figure>
           <figure data-v-reveal="up" data-v-reveal-at="0.3 0.6">
-            <img src="assets/hinge.webp" alt="Петля с доводчиком внутри шкафа" width="1200" height="1600" loading="lazy">
+            <img data-tsrc="hinge.webp" alt="Петля с доводчиком внутри шкафа" width="1200" height="1600" loading="lazy">
             <figcaption>Петля с доводчиком</figcaption>
           </figure>
         </div>
@@ -563,6 +587,26 @@
   </main>
 </div>
 
+<script>
+  (function () {
+    var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    var map = { '#f2efe9': '#121417', '#ece8e0': '#15181c', '#efebe3': '#13171a', '#f6f3ee': '#101316' };
+    document.querySelectorAll('img[data-tsrc]').forEach(function (img) { img.src = 'assets/' + (dark ? 'dark' : 'light') + '/' + img.getAttribute('data-tsrc'); });
+    if (dark) {
+      document.querySelectorAll('[data-v-drift]').forEach(function (el) { var c = (el.getAttribute('data-v-drift') || '').toLowerCase(); if (map[c]) el.setAttribute('data-v-drift', map[c]); });
+    }
+    var btn = document.getElementById('themeBtn'), label = document.getElementById('themeLabel');
+    if (label) label.textContent = dark ? 'Светлая' : 'Тёмная';
+    if (btn) {
+      btn.setAttribute('aria-label', dark ? 'Переключить тему: светлая' : 'Переключить тему: тёмная');
+      btn.addEventListener('click', function () {
+        var next = dark ? 'light' : 'dark';
+        try { localStorage.setItem('mebel-theme', next); location.reload(); }
+        catch (e) { location.search = '?theme=' + next; }
+      });
+    }
+  })();
+</script>
 <script src="vibe.js"></script>
 <script>
   (function () {
